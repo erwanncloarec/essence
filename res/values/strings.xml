@@ -10,7 +10,7 @@
     <string name="Nom">Nom</string>
     <string name="Prix">Prix</string>
     <string name="Euro">€</string>
-    <string name="Date">Date</string>
+    <string name="Date">Date (JJ/MM/AAAA)</string>
     <string name="OK">OK</string>
     <string name="ChoixDate">Choisir</string>
 

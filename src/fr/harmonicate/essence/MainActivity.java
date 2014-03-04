@@ -15,11 +15,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -77,6 +81,17 @@ public class MainActivity extends FragmentActivity implements
 			actionBar.addTab(actionBar.newTab()
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
+		}
+		
+		Button buttonOK = (Button) findViewById(R.id.button1);
+		if(buttonOK != null) {
+			buttonOK.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					validateAndSendData();
+				}
+			});
 		}
 	}
 
@@ -142,6 +157,7 @@ public class MainActivity extends FragmentActivity implements
 			case 1:
 				return getString(R.string.title_section2).toUpperCase(l);
 			}
+			
 			return null;
 		}
 	}
@@ -180,9 +196,8 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	public static class DatePickerFragment extends DialogFragment
-    implements OnDateSetListener {
-
+	public static class DatePickerFragment extends DialogFragment implements OnDateSetListener
+    {
 		@Override
 	    public Dialog onCreateDialog(Bundle savedInstanceState) {
 	        // Use the current date as the default date in the picker
@@ -190,15 +205,28 @@ public class MainActivity extends FragmentActivity implements
 	        int year = c.get(Calendar.YEAR);
 	        int month = c.get(Calendar.MONTH);
 	        int day = c.get(Calendar.DAY_OF_MONTH);
-
 	        // Create a new instance of DatePickerDialog and return it
-	        return new DatePickerDialog(getActivity(), this, year, month, day);
+	        return new DatePickerDialog(getActivity(), this , year, month, day);
 	    }
-		
+
+
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
-			// TODO Auto-generated method stub
+			EditText dateEditText = (EditText) getActivity().findViewById(R.id.editText2);
+			
+			String date= "";
+			if(dayOfMonth < 10){
+				date += "0";
+			}
+			date += "" +dayOfMonth + "/";
+			
+			if(monthOfYear < 10){
+				date += "0";
+			}
+			date += "" + (monthOfYear+1) + "/" + year;
+			
+			dateEditText.setText(date);
 			
 		}
 		
@@ -206,7 +234,35 @@ public class MainActivity extends FragmentActivity implements
 	
 	public void showDatePickerDialog(View v) {
 	    DialogFragment newFragment = new DatePickerFragment();
-	    //newFragment.show(getSupportFragmentManager(), "datePicker");
 	    newFragment.show(getFragmentManager(), "datePicker");
 	}
+
+	private void validateAndSendData(){
+		if(validateDate()){
+			
+		}
+	}
+
+	private boolean validateDate() {
+		String date = ((EditText) findViewById(R.id.editText2)).getText().toString();
+		String[] split = date.split("/");
+		//vérification jour
+		if(split.length != 3){
+			return false;
+		}
+		int day = Integer.parseInt(split[0]);
+		if(day < 1 || day > 31){
+			return false;
+		}
+		int month = Integer.parseInt(split[1]);
+		if(month < 1 || month > 12){
+			return false;
+		}
+		int year = Integer.parseInt(split[2]);
+		if(year < Calendar.getInstance().get(Calendar.MONTH)){
+			return false;
+		}
+		return true;
+	}
+
 }
