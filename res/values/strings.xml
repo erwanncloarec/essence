@@ -3,8 +3,15 @@
 
     <string name="app_name">Essence</string>
     <string name="action_settings">Settings</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">Essence 1</string>
+    <string name="title_section2">Essence 2</string>
+    <string name="Anais">Anaïs</string>
+    <string name="Erwann">Erwann</string>
+    <string name="Nom">Nom</string>
+    <string name="Prix">Prix</string>
+    <string name="Euro">€</string>
+    <string name="Date">Date</string>
+    <string name="OK">OK</string>
+    <string name="ChoixDate">Choisir</string>
 
 </resources>

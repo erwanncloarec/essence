@@ -1,8 +1,13 @@
 package fr.harmonicate.essence;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 import android.app.ActionBar;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.DatePicker;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -115,16 +120,16 @@ public class MainActivity extends FragmentActivity implements
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
-			Bundle args = new Bundle();
+			Fragment fragment = new EssenceSectionFragment();
+			/*Bundle args = new Bundle();
 			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
+			fragment.setArguments(args);*/
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
+			// Show 2 total pages.
 			return 2;
 		}
 
@@ -145,27 +150,52 @@ public class MainActivity extends FragmentActivity implements
 	 * A dummy fragment representing a section of the app, but that simply
 	 * displays dummy text.
 	 */
-	public static class DummySectionFragment extends Fragment {
+	public static class EssenceSectionFragment extends Fragment {
 		/**
 		 * The fragment argument representing the section number for this
 		 * fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
-		public DummySectionFragment() {
+		public EssenceSectionFragment() {
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main_dummy,
+			View rootView = inflater.inflate(R.layout.vue_essence,
 					container, false);
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
 			return rootView;
 		}
 	}
 
+	public static class DatePickerFragment extends DialogFragment
+    implements OnDateSetListener {
+
+		@Override
+	    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        // Use the current date as the default date in the picker
+	        final Calendar c = Calendar.getInstance();
+	        int year = c.get(Calendar.YEAR);
+	        int month = c.get(Calendar.MONTH);
+	        int day = c.get(Calendar.DAY_OF_MONTH);
+
+	        // Create a new instance of DatePickerDialog and return it
+	        return new DatePickerDialog(getActivity(), this, year, month, day);
+	    }
+		
+		@Override
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	public void showDatePickerDialog(View v) {
+	    DialogFragment newFragment = new DatePickerFragment();
+	    //newFragment.show(getSupportFragmentManager(), "datePicker");
+	    newFragment.show(getFragmentManager(), "datePicker");
+	}
 }
