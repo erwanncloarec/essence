@@ -121,9 +121,9 @@ public class MainActivity extends FragmentActivity implements
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
 			Fragment fragment = new EssenceSectionFragment();
-			/*Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);*/
+			Bundle args = new Bundle();
+			args.putInt(EssenceSectionFragment.ARG_SECTION_NUMBER, position + 1);
+			fragment.setArguments(args);
 			return fragment;
 		}
 
@@ -156,15 +156,26 @@ public class MainActivity extends FragmentActivity implements
 		 * fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		public EssenceSectionFragment() {
+		
+		public EssenceSectionFragment(){
 		}
-
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.vue_essence,
-					container, false);
+			int position=getArguments().getInt(ARG_SECTION_NUMBER);
+			View rootView;
+			if (position==1)
+			{
+				 rootView= inflater.inflate(R.layout.vue_essence,
+						container, false);
+			}
+			else 
+			{
+				rootView = inflater.inflate(R.layout.vue_essence_2,
+						container, false);
+			}
+			
 			return rootView;
 		}
 	}
