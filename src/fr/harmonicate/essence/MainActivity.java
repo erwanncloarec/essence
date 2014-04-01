@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -24,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -42,10 +42,15 @@ public class MainActivity extends FragmentActivity implements
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	
+	ConnexionBDD connexionBDD;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		connexionBDD = new ConnexionBDD(this);
+		
 		setContentView(R.layout.activity_main);
 
 		// Set up the action bar.
@@ -239,9 +244,30 @@ public class MainActivity extends FragmentActivity implements
 
 	private void validateAndSendData(){
 		if(validateDate()){
+			Plein plein=new Plein();
 			
+			String date = ((EditText) findViewById(R.id.editText2)).getText().toString();
+			
+			RadioButton radioButton = (RadioButton) findViewById(R.id.radioButton1);
+			String nomPersonne;
+			if(radioButton.isChecked())
+				nomPersonne = radioButton.getText().toString();
+			else {
+				radioButton = (RadioButton) findViewById(R.id.radioButton2);
+				nomPersonne = radioButton.getText().toString();
+			}
+			
+			EditText prix = (EditText) findViewById(R.id.editText1);
+			String prixLitre = prix.getText().toString();
+			
+			plein.setDatePlein(date);
+			plein.setNomPersonne(nomPersonne);
+			plein.setPrixLitre(prixLitre);
+			
+			connexionBDD.addPlein(plein);
 		}
 	}
+
 
 	private boolean validateDate() {
 		String date = ((EditText) findViewById(R.id.editText2)).getText().toString();
