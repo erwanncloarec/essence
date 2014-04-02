@@ -1,6 +1,7 @@
 package fr.harmonicate.essence;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -24,6 +25,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -88,16 +93,6 @@ public class MainActivity extends FragmentActivity implements
 					.setTabListener(this));
 		}
 		
-		Button buttonOK = (Button) findViewById(R.id.button1);
-		if(buttonOK != null) {
-			buttonOK.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					validateAndSendData();
-				}
-			});
-		}
 	}
 
 	@Override
@@ -185,19 +180,79 @@ public class MainActivity extends FragmentActivity implements
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			int position=getArguments().getInt(ARG_SECTION_NUMBER);
+			View view = inflater.inflate(R.layout.vue_essence_2, container, false);
 			View rootView;
 			if (position==1)
 			{
 				 rootView= inflater.inflate(R.layout.vue_essence,
 						container, false);
+				 
+				 Button buttonOK = (Button) rootView.findViewById(R.id.button1);
+					if(buttonOK != null) {
+						
+						buttonOK.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View arg0) {
+								MainActivity activity = (MainActivity) getActivity();
+								Toast.makeText(activity, "Bouton cliquer",Toast.LENGTH_SHORT).show();
+								activity.validateAndSendData();
+							}
+						});
+					}
+					
+					
 			}
 			else 
 			{
 				rootView = inflater.inflate(R.layout.vue_essence_2,
 						container, false);
+				fillTable(rootView);
+				
 			}
 			
 			return rootView;
+		}
+		
+		public void fillTable(View view){
+			List<Plein> liste;
+			TableLayout table=(TableLayout)view.findViewById(R.id.tableLayout);
+			TableRow tableRow=new TableRow(view.getContext());
+			
+			TextView textView=new TextView(view.getContext());
+			textView.setText("Date");
+			tableRow.addView(textView);
+			
+			textView=new TextView(view.getContext());
+			textView.setText("Nom");
+			tableRow.addView(textView);
+			
+			textView=new TextView(view.getContext());
+			textView.setText("Prix");
+			tableRow.addView(textView);
+			
+			table.addView(tableRow);
+			
+			ConnexionBDD connexionBDD = ((MainActivity) getActivity()).getConnexionBDD();
+			liste=connexionBDD.getAllPlein();
+			for (Plein plein : liste) {
+				
+				tableRow=new TableRow(view.getContext());
+				textView=new TextView(view.getContext());
+				textView.setText(plein.getDatePlein());
+				tableRow.addView(textView);
+				
+				textView=new TextView(view.getContext());
+				textView.setText(plein.getNomPersonne());
+				tableRow.addView(textView);
+				
+				textView=new TextView(view.getContext());
+				textView.setText(plein.getPrixLitre());
+				tableRow.addView(textView);
+				
+				table.addView(tableRow);
+			}
+			
 		}
 	}
 
@@ -242,7 +297,7 @@ public class MainActivity extends FragmentActivity implements
 	    newFragment.show(getFragmentManager(), "datePicker");
 	}
 
-	private void validateAndSendData(){
+	protected void validateAndSendData(){
 		if(validateDate()){
 			Plein plein=new Plein();
 			
@@ -290,5 +345,10 @@ public class MainActivity extends FragmentActivity implements
 		}
 		return true;
 	}
+	
+	private ConnexionBDD getConnexionBDD() {
+		return this.connexionBDD;
+	}
+	
 
 }
